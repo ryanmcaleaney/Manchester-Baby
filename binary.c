@@ -6,7 +6,7 @@
 
 char* padBinary(char* binary){
     int binaryLength = strlen(binary);
-    int paddingNeeded = 8 - binaryLength;
+    int paddingNeeded = 13 - binaryLength;
     // Allocate memory for the padded string (+1 for the null terminator)
     char* paddedBinary = malloc(MEMORY_SIZE * sizeof(char));
     if (paddedBinary == NULL)
@@ -29,6 +29,8 @@ char* negateString(char* binString){
         return NULL;
     int l = strlen(binString);
     char* tempString = malloc(33 * sizeof(char));
+    if(tempString == NULL)
+        return NULL;
     
     for(int i = 0; i < l; i++){
 
@@ -151,6 +153,35 @@ char *addStrings(char* string1, char* string2){
 
 char* subStrings(char* string1, char* string2){
 
-    
+    int val1 = binToDecCompliment(string1);
+    int val2 = binToDecCompliment(string2);
 
+    char* sum = malloc(MEMORY_SIZE * sizeof(char));
+    if(sum == NULL){
+        return NULL;
+    }
+    char* temp1 = malloc(MEMORY_SIZE * sizeof(char));
+    if(temp1 == NULL)
+        return NULL;
+    char* temp2 = malloc(MEMORY_SIZE * sizeof(char));
+    if(temp2 == NULL)
+        return NULL;
+
+    if(val1 < val2){
+        strcpy(temp1, string2);
+        strcpy(temp2, string1);
+    }else if(val1 > val2){
+        strcpy(temp1, string1);
+        strcpy(temp2, string2);
+    }
+
+    for(int i = 0; i<strlen(string1); i++){
+
+        if(temp1[i] == '1' && temp2[i] == '1'){
+            
+        }
+
+    }
+
+    return sum;
 }
