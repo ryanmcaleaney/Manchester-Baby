@@ -1,3 +1,3 @@
 all:
-	gcc baby.c -o baby
+	gcc baby.c -o baby -lm
 	./baby

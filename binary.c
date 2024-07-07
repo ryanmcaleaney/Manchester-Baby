@@ -1,22 +1,94 @@
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
-char *padBinary(char* binary){
+#define MEMORY_SIZE 33
+
+char* padBinary(char* binary){
     int binaryLength = strlen(binary);
-    int paddingNeeded = 32 - binaryLength;
+    int paddingNeeded = 8 - binaryLength;
     // Allocate memory for the padded string (+1 for the null terminator)
-    char *paddedBinary = malloc(33 * sizeof(char));
-    if (paddedBinary == NULL) {
-        // Handle memory allocation failure
+    char* paddedBinary = malloc(MEMORY_SIZE * sizeof(char));
+    if (paddedBinary == NULL)
         return NULL;
-    }
+    
     // Fill the beginning of paddedBinary with zeros
     for(int i = 0; i < paddingNeeded; i++){
         paddedBinary[i] = '0';
     }
     // Copy the original binary string to the end of the padded zeros
-    strcpy(paddedBinary + paddingNeeded, binary);
-    return paddedBinary;
+    strcat(binary, paddedBinary);
+    free(paddedBinary);
+    paddedBinary = NULL;
+    return NULL;
+}
+
+
+char* negateString(char* binString){
+    if(strcmp("0", binString))
+        return NULL;
+    int l = strlen(binString);
+    char* tempString = malloc(33 * sizeof(char));
+    
+    for(int i = 0; i < l; i++){
+
+        if(binString[i] == '1'){
+            tempString[i] = '0';
+        }else{
+            tempString[i] = '1';
+        }
+
+    }
+
+    if(tempString[0] == '1'){
+        tempString[0] = '0';
+    }else if(tempString[0] == '0'){
+        tempString[0] = '1';
+    }
+
+    strcpy(binString, tempString);
+    free(tempString);
+    return NULL;
+}
+
+char* reverseString(char* binary){
+
+    int binaryLength = strlen(binary);
+    char* temp = malloc(33 * sizeof(char));
+    if(temp == NULL)
+        return NULL;
+    for(int i = binaryLength; i>0;i--){
+        temp[i] = binary[i];
+    }
+    strcpy(temp, binary);
+    free(temp);
+    temp = NULL;
+    return NULL;
+    
+}
+
+int binToDecCompliment(char* binary){
+
+    signed int sum = 0;
+    int mult = 1;
+    //double comp = -pow(2, (double)strlen(binary)-1); 
+
+    for(int i = 0; i<strlen(binary)-1; i++){
+
+        if(binary[i] == '1'){
+            sum+=mult;
+        }
+        mult *= 2;
+    }
+    if(binary[strlen(binary)-1] == '0'){
+        mult = 0;
+    }
+
+    sum = sum + -mult;
+    //debug string 
+    // printf("Comp: %d\nLength of String: %d\nSum: %d\n", (int)comp, (int)strlen(binary), sum);
+
+    return sum;
 }
 
 int binToDec(char* binary){
@@ -76,20 +148,6 @@ char *addStrings(char* string1, char* string2){
     return sum;
 }
 
-char* negateString(char* binString){
-    int l = strlen(binString);
-    char* tempString = malloc(33 * sizeof(char));
-    for(int i = 0; i < l; i++){
-
-        if(binString[i] == '1'){
-            tempString[i] = '0';
-        }else{
-            tempString[i] = '1';
-        }
-
-    }
-    return tempString;
-}
 
 char* subStrings(char* string1, char* string2){
 
