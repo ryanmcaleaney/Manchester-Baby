@@ -128,7 +128,7 @@ char *addStrings(char* string1, char* string2){
             if(carry == '1'){
             sum[i] = '0';
             }else{
-                sum[i] == '1';
+                sum[i] = '1';
             }
         }else if(string1[i] == '0' && string2[i] == '0'){
             if(carry == '1'){
@@ -153,9 +153,13 @@ char *addStrings(char* string1, char* string2){
 
 char* subStrings(char* string1, char* string2){
 
-    int val1 = binToDecCompliment(string1);
-    int val2 = binToDecCompliment(string2);
+    int length = strlen(string1);
 
+    int val1 = binToDec(string1);
+    int val2 = binToDec(string2);
+    //short int carry = 0;
+    //int carryIndex = 0;
+    
     char* sum = malloc(MEMORY_SIZE * sizeof(char));
     if(sum == NULL){
         return NULL;
@@ -175,13 +179,35 @@ char* subStrings(char* string1, char* string2){
         strcpy(temp2, string2);
     }
 
-    for(int i = 0; i<strlen(string1); i++){
+    printf("\n%s: %d\n%s: %d\n", temp1, val1, temp2, val2);
+
+    for(int i = 0; i<length; i++){
 
         if(temp1[i] == '1' && temp2[i] == '1'){
-            
+            // if(carry == 1){
+            //     sum
+            // }
+            sum[i] = '0'; 
+        }else if(temp1[i] == '1' && temp2[i] == '0'){
+            sum[i] = '1';
+        }else if(temp1[i] == '0' && temp2[i] == '0'){
+            sum[i] = '0';
+        }else if(temp1[i] == '0' && temp2[i] == '1'){
+            for(int l = i; l < length; l++){
+                if(temp1[l] == '0'){
+                    temp1[l] = '1';
+                }else if(temp1[l] == '1'){
+                    temp1[l] = '0';
+                    sum[i] = '1';
+                    break;
+                }
+            }
         }
 
     }
-
+    free(temp1);
+    free(temp2);
+    temp1 = NULL;
+    temp2 = NULL;
     return sum;
 }

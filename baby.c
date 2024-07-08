@@ -10,10 +10,17 @@ int main(){
     char** memory = malloc((32*33) * sizeof(char));
     char* accumulator = malloc(33 * sizeof(char));
     int pc = 0;
+    //testing code below here
+    char* temp = malloc(MEMORY_SIZE * 8);
+    temp = subStrings("1111", "0001");
+    printf("%s: %d", temp, binToDec(temp));
 
-
+    free(temp);
+    temp = NULL;
     free(memory);
     free(accumulator);
+    memory = NULL;
+    accumulator = NULL;
     return 0;
 
 }
@@ -39,3 +46,4 @@ void printMem(char* memory){
     for(int i = 0; i < 32; i++){
         printf("%s\n", memory + (i * 33));
     }
+} 
