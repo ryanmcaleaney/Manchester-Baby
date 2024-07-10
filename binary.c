@@ -1,8 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-
-#define MEMORY_SIZE 33
+#include "binary.h"
 
 char* padBinary(char* binary){
     int binaryLength = strlen(binary);
@@ -202,6 +198,8 @@ char* subStrings(char* string1, char* string2){
                     break;
                 }
             }
+        }else{
+            break;
         }
 
     }
