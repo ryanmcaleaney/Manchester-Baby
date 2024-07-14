@@ -33,7 +33,6 @@ int main(){
 
     while(opcode != 7 || runTime == __UINT16_MAX__){
         pc++;
-        printMem(memory);
         if(pc>32 || pc<0){
             break;
         }
@@ -41,7 +40,6 @@ int main(){
         operand = getOperand(memory, pc);
         freeflag = 0;
         int line = 0;
-        //printf("%d", line );
         if(opcode == 0){ // JMP S, Jump to the instruction in the operand
             pc = binToDecCompliment(operand)-1;
         }else if(opcode == 1){ // JRP S, Jump to Line number + Operand 
@@ -99,7 +97,6 @@ int main(){
             operand = NULL;
         }
     }
-    dissassembleMemory(memory);
     free(accumulator);
     accumulator = NULL;
     printMem(memory);
