@@ -2,7 +2,7 @@
 
 char* padBinary(char* binary){
     int binaryLength = strlen(binary);
-    int paddingNeeded = 13 - binaryLength;
+    int paddingNeeded = 32 - binaryLength;
     // Allocate memory for the padded string (+1 for the null terminator)
     char* paddedBinary = malloc(MEMORY_SIZE * sizeof(char));
     if (paddedBinary == NULL)
@@ -13,9 +13,10 @@ char* padBinary(char* binary){
         paddedBinary[i] = '0';
     }
     // Copy the original binary string to the end of the padded zeros
-    strcat(binary, paddedBinary);
-    free(paddedBinary);
-    paddedBinary = NULL;
+    paddedBinary[32] = '\0';
+    strcpy(binary ,strcat(binary, paddedBinary));
+    // free(paddedBinary);
+    // paddedBinary = NULL;
     return NULL;
 }
 
@@ -120,7 +121,7 @@ char *addStrings(char* string1, char* string2){
             }else{
                 sum[i] = '1';
             }
-        }else if(string1[i] == '1' && string2[i] == '0' || string1[i] == '0' && string2[i] == '1'){
+        }else if((string1[i] == '1' && string2[i] == '0') || (string1[i] == '0' && string2[i] == '1')){
             if(carry == '1'){
             sum[i] = '0';
             }else{
