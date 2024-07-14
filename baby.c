@@ -23,18 +23,17 @@ int main(){
     int pc = 0;
     unsigned short runTime = 0; //Making sure it doesn't run too long
     unsigned short opcode = 0;
-    // char* opcodeStr;
     char* operand;
     int freeflag;
     char* temp = malloc(MEMORY_SIZE * sizeof(char));
     
-    //dissassembleMemory(memory);
 
-    // printf("%d", __UINT16_MAX__);
+    accumulator[32] = '\n';
+    accumulator[33] = '\0';
 
     while(opcode != 7 || runTime == __UINT16_MAX__){
+        pc++;
         printMem(memory);
-        printf("\n%d\n", pc);
         if(pc>32 || pc<0){
             break;
         }
@@ -44,27 +43,37 @@ int main(){
         int line = 0;
         //printf("%d", line );
         if(opcode == 0){ // JMP S, Jump to the instruction in the operand
-            pc = binToDecCompliment(operand);
+            pc = binToDecCompliment(operand)-1;
         }else if(opcode == 1){ // JRP S, Jump to Line number + Operand 
             pc = pc + binToDecCompliment(operand);
         }else if(opcode == 2){ // LDN S, Negate the number at the specified memory address and load to the acc
+            
             line = binToDecCompliment(operand);// gets the line 
             if(line > 32 || line < 0){ //tests to see if it's out of bounds
                 printf("Issue at operand 2");
                 break;
             }
-
             free(operand); // frees operand to get the operand loaded at the memory address 
             operand = NULL; // Sets operand to Null to ensure no null pointer
             freeflag = 1;
-            operand = getOperand(memory, line); // Gets the operand from the line specified 
-            
-            // printf("%d %d ", (int)strlen(accumulator), (int)strlen(operand));
-            strcpy(accumulator, operand);
+            operand = getOperand(memory, line); // Gets the operand from the line specified
+            for(int i = 0; i < 12; i++){
+                if(operand[i] == '0'){
+                    operand[i] = '1';
+                }else{
+                    operand[i] = '0';
+                }
+            }
+            for(int i = 0; i < 12; i++){
+
+                accumulator[i] = operand[i];
+
+            }
         }else if(opcode == 3){ // STO S, Store the number in the accumulator to the specified memory address
-            
-            strcpy(memory[pc], accumulator);
+            line = binToDecCompliment(operand);
+            strcpy(memory[line], accumulator);
         }else if(opcode == 4){ // SUB S, Subtract the number from the accumulator and store the answer in the accumulator
+            
             line = binToDecCompliment(operand);
             if(line > 32 || line < 0){
                 printf("Issue at operand 2");
@@ -74,25 +83,26 @@ int main(){
             operand = NULL;
             freeflag = 1;
             operand = getOperand(memory, line);
-            // padBinary(operand);
-            // printf("\n%d\n", pc);
-
+            char* sum = getAccumulator(accumulator);
+            temp = addStrings(operand, sum);
+            for(int i = 0; i < 12; i++){
+                accumulator[i] = temp[i];
+            }
 
         }else if(opcode == 6){ // CMP, skip the next instruction if it's a negative number
              if(binToDecCompliment(operand) < 0)
                 pc++;
         }
 
-        pc++;
         if(freeflag == 0){
             free(operand);
             operand = NULL;
         }
     }
-    
+    dissassembleMemory(memory);
     free(accumulator);
     accumulator = NULL;
-    deAllocMem(memory);
+    printMem(memory);
     return 0;
 
 }
@@ -144,11 +154,8 @@ void initMem(char** memory, int inc){
     char* temp /*= (char *)malloc(MEMORY_SIZE * sizeof(char))*/;
     for(int i = inc; i < MEMORY_SIZE; i++){
         temp = memory[i];
-        // printf("%d", strlen(memory[i]));
-        // if(strlen(temp) > 0){
         strcpy(temp, "00000000000000000000000000000000\n");
         temp[MEMORY_SIZE] = '\0';
-        // }
     }
 } 
 
@@ -156,7 +163,6 @@ void allocateMem(char** memory){
 
     for(int i = 0; i < MEMORY_SIZE; i++){
         memory[i] = (char *)malloc(MEMORY_SIZE * sizeof(char));
-        //printf("Iteration: %d\n", i);
         if(memory[i] == NULL){
             printf("Memory allocation failure\n");
             return;
@@ -198,7 +204,6 @@ char* getOperand(char** memory, int pc){
     
     strncpy(result, memory[pc], 12);
 
-    result[12] = '\0';
 
     return result;
 
